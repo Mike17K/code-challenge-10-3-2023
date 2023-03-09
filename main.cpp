@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stdio.h>
 
 using namespace std;
 void bruteForce(int depth, vector<int> *lengths, vector<vector<int>> *mapOfSnakes);
-void getInputs(int *C, int *R, int *S, vector<int> *lengths);
+void getInputs(vector<int> *lengths);
 void calcNewArray(int lenth, int C, int R, int d, vector<vector<int>> *mapOfSnakes, vector<vector<int>> *newMapOfSnakes);
 
 int maxScore = 0;
@@ -17,7 +18,8 @@ int main()
 
     vector<int> lengths;
 
-    getInputs(&C, &R, &S, &lengths);
+    getInputs(&lengths);
+    cout << C << " " << R << " " << S << endl;
 
     for (int i = 0; i < R; i++)
     {
@@ -211,7 +213,7 @@ void calcNewArray(int length, int c, int r, int d, vector<vector<int>> *mapOfSna
     }
 }
 
-void getInputs(int *C, int *R, int *S, vector<int> *lengths)
+void getInputs(vector<int> *lengths)
 {
 
     ifstream inFile("00-example.txt"); // Open input file
@@ -227,45 +229,45 @@ void getInputs(int *C, int *R, int *S, vector<int> *lengths)
         // cout << num << " "; // Print integer to console
         if (i == 0)
         {
-            *C = num;
+            C = num;
         }
         if (i == 1)
-            *R = num;
+            R = num;
         if (i == 2)
         {
-            *S = num;
-            lengths->reserve(*S);
+            S = num;
+            lengths->reserve(S);
             lengths->clear();
         }
-        if (i > 2 && i < 3 + *S)
+        if (i > 2 && i < 3 + S)
         {
             // cout << num << endl;
             lengths->push_back(num);
         }
-        if (i == 2 + *S && i > 2)
+        if (i == 2 + S && i > 2)
             break;
         i++;
     }
-
-    map = vector<vector<int>>(*C, vector<int>(*R, 0));
+    // cout << *R << " " << *C << endl;
+    map = vector<vector<int>>(R, vector<int>(C, 0));
     char c;
-    i = 0;
 
-    while (inFile >> c)
-    { // Read integers from file until end-of-file
-        //        cout << c << " "; // Print integer to console
-
-        if (c == '*')
+    for (int i = 0; i < R; i++)
+    {
+        for (int j = 0; j < C; j++)
         {
-            map[i / *C][i % *C] = -1;
-        }
-        else
-        {
-            map[i / *C][i % *C] = (int)c - '0';
-        }
+            inFile >> c;
 
-        i++;
-    };
+            if (c == '*')
+            {
+                map[i][j] = -1;
+            }
+            else
+            {
+                map[i][j] = c - '0';
+            }
+        }
+    }
 
     inFile.close(); // Close input file
 }
